@@ -1,0 +1,18 @@
+# scripts/monitor_transactions.py
+
+from web3 import Web3
+
+def monitor_transactions(provider_url, contract_address):
+    web3 = Web3(Web3.HTTPProvider(provider_url))
+    contract = web3.eth.contract(address=contract_address, abi=YOUR_CONTRACT_ABI)
+
+    def handle_event(event):
+        print(f"New transaction detected: {event}")
+
+    event_filter = contract.events.Transfer().createFilter(fromBlock='latest')
+    while True:
+        for event in event_filter.get_new_entries():
+            handle_event(event)
+
+# Example usage:
+# monitor_transactions('https://mainnet.infura.io/v3/your_project_id', '0xYourContractAddress')
